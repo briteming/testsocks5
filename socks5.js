@@ -57,7 +57,7 @@ try{
     }
     b = hexdecode("00200001010000010000000000000a74787468696e6b696e6703636f6d0000010001");
     await c.write(b);
-    b = new Uint8Array(65537);
+    b = new Uint8Array(65507);
     var i = await r.read(b);
     c.close();
     if(equal(b.slice(i-4, i), new Uint8Array([0x68, 0xc7, 0x8b, 0x17]))){
@@ -120,7 +120,7 @@ try{
     var c1 = Deno.listenDatagram({hostname: c.localAddr.hostname, port: c.localAddr.port, transport: "udp"});
     b = hexdecode("000000010808080800350001010000010000000000000a74787468696e6b696e6703636f6d0000010001");
     await c1.send(b, {transport: "udp", hostname: h, port: p});
-    b = new Uint8Array(65537);
+    b = new Uint8Array(65507);
     var l = await c1.receive(b);
     c1.close();
     c.close();
