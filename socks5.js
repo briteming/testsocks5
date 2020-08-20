@@ -4,7 +4,7 @@ import { varnum } from "https://deno.land/std/encoding/binary.ts";
 import { equal } from "https://deno.land/std/bytes/mod.ts";
 
 if(Deno.args.length != 1 || Deno.args[0] == "help" || Deno.args[0] == "h" || Deno.args[0] == "--help" || Deno.args[0] == "-h"){
-    console.log("$ deno run -A https://git.io/testsocks5.js SOCKS5_HOST:SOCKS5_PORT");
+    console.log("$ deno run -A https://git.io/socks5.js SOCKS5_HOST:SOCKS5_PORT");
     Deno.exit(0);
 }
 
