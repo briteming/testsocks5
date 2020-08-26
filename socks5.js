@@ -2,13 +2,18 @@ import { BufReader } from "https://deno.land/std/io/bufio.ts";
 import { decodeString as hexdecode } from "https://deno.land/std/encoding/hex.ts";
 import { varnum } from "https://deno.land/std/encoding/binary.ts";
 import { equal } from "https://deno.land/std/bytes/mod.ts";
+import { parse } from "https://deno.land/std/flags/mod.ts";
+import { concat } from "https://deno.land/std/bytes/mod.ts";
 
-if(Deno.args.length != 1 || Deno.args[0] == "help" || Deno.args[0] == "h" || Deno.args[0] == "--help" || Deno.args[0] == "-h"){
-    console.log("$ deno run -A https://git.io/socks5.js SOCKS5_HOST:SOCKS5_PORT");
+var args = parse(Deno.args);
+
+if(args.h || !args.s){
+    console.log("$ deno run -A https://git.io/socks5.js -s SOCKS5_HOST:SOCKS5_PORT");
+    console.log("$ deno run -A https://git.io/socks5.js -s SOCKS5_HOST:SOCKS5_PORT -u USERNAME -p PASSWORD");
     Deno.exit(0);
 }
 
-var l = Deno.args[0].split(":");
+var l = args.s.split(":");
 if(l.length != 2 || isNaN(new Number(l[1]))){
     console.log("Invalid socks5 server");
     Deno.exit(0);
@@ -22,16 +27,35 @@ try{
     var r = await new BufReader(c);
     // For convenience, we create a new buffer every time
     var b = new Uint8Array([0x05, 0x01, 0x00]);
+    if(args.u && args.p){
+        b[2] = 0x02;
+    }
     await c.write(b);
-    b = new Uint8Array(2);
-    await r.readFull(b);
-    if (b[0] != 0x05){
+    var b1 = new Uint8Array(2);
+    await r.readFull(b1);
+    if (b1[0] != 0x05){
         console.log("Error:\t", "server is not socks version 5");
         Deno.exit(1);
     }
-    if (b[1] != 0x00){
-        console.log("Error:\t", "It looks like your socks5 server require auth, this script does not support it yet");
+    if (b1[1] != b[2]){
+        console.log("Error:\t", "server does not support method", b[2]);
         Deno.exit(1);
+    }
+    if(b[2] == 0x02){
+        b = new Uint8Array([0x01]);
+        var u = new TextEncoder().encode(args.u);
+        b = concat(b, new Uint8Array([u.length]));
+        b = concat(b, u);
+        var p = new TextEncoder().encode(args.p);
+        b = concat(b, new Uint8Array([p.length]));
+        b = concat(b, p);
+        await c.write(b);
+        b = new Uint8Array(2);
+        await r.readFull(b);
+        if (b[1] != 0x00){
+            console.log("Error:\t", "invalid username or password");
+            Deno.exit(1);
+        }
     }
     b = new Uint8Array([0x05, 0x01, 0x00, 0x01, 0x08, 0x08, 0x08, 0x08, 0x00, 0x35]);
     await c.write(b);
@@ -75,16 +99,35 @@ try{
     var c = await Deno.connect({ hostname: host, port: port, transport: "tcp" });
     var r = await new BufReader(c);
     var b = new Uint8Array([0x05, 0x01, 0x00]);
+    if(args.u && args.p){
+        b[2] = 0x02;
+    }
     await c.write(b);
-    b = new Uint8Array(2);
-    await r.readFull(b);
-    if (b[0] != 0x05){
+    var b1 = new Uint8Array(2);
+    await r.readFull(b1);
+    if (b1[0] != 0x05){
         console.log("Error:\t", "server is not socks version 5");
         Deno.exit(1);
     }
-    if (b[1] != 0x00){
-        console.log("Error:\t", "Unsupport method");
+    if (b1[1] != b[2]){
+        console.log("Error:\t", "server does not support method", b[2]);
         Deno.exit(1);
+    }
+    if(b[2] == 0x02){
+        b = new Uint8Array([0x01]);
+        var u = new TextEncoder().encode(args.u);
+        b = concat(b, new Uint8Array([u.length]));
+        b = concat(b, u);
+        var p = new TextEncoder().encode(args.p);
+        b = concat(b, new Uint8Array([p.length]));
+        b = concat(b, p);
+        await c.write(b);
+        b = new Uint8Array(2);
+        await r.readFull(b);
+        if (b[1] != 0x00){
+            console.log("Error:\t", "invalid username or password");
+            Deno.exit(1);
+        }
     }
     b = new Uint8Array([0x05, 0x03, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
     await c.write(b);
