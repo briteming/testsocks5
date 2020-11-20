@@ -11,6 +11,6 @@ Test TCP and UDP of socks5 server
 > Need [Deno](https://github.com/denoland/deno) installed, or install with nami `$ nami install github.com/namipkg/deno` 
 
 ```
-$ deno run -A --unstable https://git.io/socks5.js SOCKS5_HOST:SOCKS5_PORT
-$ deno run -A --unstable https://git.io/socks5.js SOCKS5_HOST:SOCKS5_PORT -u USERNAME -p PASSWORD
+$ deno run -A --unstable https://git.io/socks5.js -s SOCKS5_HOST:SOCKS5_PORT
+$ deno run -A --unstable https://git.io/socks5.js -s SOCKS5_HOST:SOCKS5_PORT -u USERNAME -p PASSWORD
 ```
