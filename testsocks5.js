@@ -7,7 +7,7 @@ import { concat } from "https://deno.land/std@0.88.0/bytes/mod.ts";
 
 var args = parse(Deno.args);
 
-if(args.h || !args.s){
+if(args.h || args.help || args.v || args.version || !args.s){
     console.log("$ testsocks5 -s SOCKS5_HOST:SOCKS5_PORT");
     console.log("$ testsocks5 -s SOCKS5_HOST:SOCKS5_PORT -u USERNAME -p PASSWORD");
     Deno.exit(0);
