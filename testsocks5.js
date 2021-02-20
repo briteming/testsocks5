@@ -1,9 +1,9 @@
-import { BufReader } from "https://deno.land/std/io/bufio.ts";
-import { decodeString as hexdecode } from "https://deno.land/std/encoding/hex.ts";
-import { varnum } from "https://deno.land/std/encoding/binary.ts";
-import { equal } from "https://deno.land/std/bytes/mod.ts";
-import { parse } from "https://deno.land/std/flags/mod.ts";
-import { concat } from "https://deno.land/std/bytes/mod.ts";
+import { BufReader } from "https://deno.land/std@0.88.0/io/bufio.ts";
+import { decodeString as hexdecode } from "https://deno.land/std@0.88.0/encoding/hex.ts";
+import { varnum } from "https://deno.land/std@0.88.0/encoding/binary.ts";
+import { equals } from "https://deno.land/std@0.88.0/bytes/mod.ts";
+import { parse } from "https://deno.land/std@0.88.0/flags/mod.ts";
+import { concat } from "https://deno.land/std@0.88.0/bytes/mod.ts";
 
 var args = parse(Deno.args);
 
@@ -84,7 +84,7 @@ try{
     b = new Uint8Array(65507);
     var i = await r.read(b);
     c.close();
-    if(equal(b.slice(i-4, i), new Uint8Array([0x68, 0xc7, 0x8b, 0x17]))){
+    if(equals(b.slice(i-4, i), new Uint8Array([0x68, 0xc7, 0x8b, 0x17]))){
         console.log("OK:\t", "TCP response is OK");
     }else{
         console.log("Warning", "TCP response is not expected");
@@ -167,7 +167,7 @@ try{
     var l = await c1.receive(b);
     c1.close();
     c.close();
-    if(equal(l[0].slice(-4), new Uint8Array([0x68, 0xc7, 0x8b, 0x17]))){
+    if(equals(l[0].slice(-4), new Uint8Array([0x68, 0xc7, 0x8b, 0x17]))){
         console.log("OK:\t", "UDP response is OK");
     }else{
         console.log("Warning", "UDP response is not expected");
