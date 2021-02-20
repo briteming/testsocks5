@@ -1,4 +1,4 @@
-# socks5.js
+# testsocks5
 
 Test TCP and UDP of socks5 server
 
