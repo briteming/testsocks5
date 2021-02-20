@@ -8,8 +8,8 @@ import { concat } from "https://deno.land/std/bytes/mod.ts";
 var args = parse(Deno.args);
 
 if(args.h || !args.s){
-    console.log("$ deno run -A https://git.io/socks5.js -s SOCKS5_HOST:SOCKS5_PORT");
-    console.log("$ deno run -A https://git.io/socks5.js -s SOCKS5_HOST:SOCKS5_PORT -u USERNAME -p PASSWORD");
+    console.log("$ testsocks5 -s SOCKS5_HOST:SOCKS5_PORT");
+    console.log("$ testsocks5 -s SOCKS5_HOST:SOCKS5_PORT -u USERNAME -p PASSWORD");
     Deno.exit(0);
 }
 
